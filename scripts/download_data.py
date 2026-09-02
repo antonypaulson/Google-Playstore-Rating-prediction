@@ -64,15 +64,14 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def validate(path: Path, check_checksum: bool = True) -> int:
-    if check_checksum:
-        digest = file_sha256(path)
-        if digest != EXPECTED_SHA256:
-            raise ValueError(
-                f"SHA-256 mismatch for {path}: got {digest}, "
-                f"expected {EXPECTED_SHA256}. This is not the lava18 "
-                "googleplaystore.csv used by the notebook."
-            )
+def validate(path: Path, check_checksum: bool = True) -> tuple[int, str]:
+    digest = file_sha256(path)
+    if check_checksum and digest != EXPECTED_SHA256:
+        raise ValueError(
+            f"SHA-256 mismatch for {path}: got {digest}, "
+            f"expected {EXPECTED_SHA256}. This is not the lava18 "
+            "googleplaystore.csv used by the notebook."
+        )
 
     with path.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
@@ -88,7 +87,7 @@ def validate(path: Path, check_checksum: bool = True) -> int:
             f"CSV has {rows} data rows, expected {EXPECTED_ROWS} "
             "(lava18 googleplaystore.csv)."
         )
-    return rows
+    return rows, digest
 
 
 def main() -> int:
@@ -109,7 +108,7 @@ def main() -> int:
 
     if args.output.exists():
         try:
-            rows = validate(args.output, check_checksum=not args.skip_checksum)
+            rows, digest = validate(args.output, check_checksum=not args.skip_checksum)
         except ValueError as exc:
             print(exc, file=sys.stderr)
             print(
@@ -118,7 +117,8 @@ def main() -> int:
                 file=sys.stderr,
             )
             return 1
-        print(f"Already present: {args.output} ({rows} rows, checksum ok)")
+        status = "checksum skipped" if args.skip_checksum else "checksum ok"
+        print(f"Already present: {args.output} ({rows} rows, {status}, sha256={digest})")
         return 0
 
     errors = []
@@ -126,8 +126,9 @@ def main() -> int:
         try:
             print(f"Downloading {url}")
             download(url, args.output)
-            rows = validate(args.output, check_checksum=not args.skip_checksum)
-            print(f"Wrote {args.output} ({rows} rows, sha256={EXPECTED_SHA256})")
+            rows, digest = validate(args.output, check_checksum=not args.skip_checksum)
+            status = "checksum skipped" if args.skip_checksum else "checksum ok"
+            print(f"Wrote {args.output} ({rows} rows, {status}, sha256={digest})")
             return 0
         except (urllib.error.URLError, OSError, ValueError) as exc:
             errors.append(f"{url}: {exc}")
