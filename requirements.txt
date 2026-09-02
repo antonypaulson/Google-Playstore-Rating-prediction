@@ -1,0 +1,12 @@
+# Runtime dependencies for Google_apps.ipynb
+# Tested with Python 3.10–3.12. TensorFlow is only needed for the neural-network cells.
+
+pandas>=2.1.0,<3
+numpy>=1.26.0,<3
+scikit-learn>=1.4.0,<2
+seaborn>=0.13.0,<0.14
+matplotlib>=3.8.0,<4
+lightgbm>=4.3.0,<5
+tensorflow>=2.16.0,<3
+jupyter>=1.0.0
+ipykernel>=6.0.0
