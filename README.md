@@ -51,7 +51,7 @@ From the repository root:
 python scripts/download_data.py
 ```
 
-That writes `data/googleplaystore.csv`. You can also download the file from Kaggle and place it in the repository root or in `data/`. Details are in [`data/README.md`](data/README.md).
+That writes `data/googleplaystore.csv` after checking the pinned SHA-256 and the expected 10,841 rows. You can also download the file from Kaggle and place it in the repository root or in `data/`. Details are in [`data/README.md`](data/README.md).
 
 The notebook looks for:
 
