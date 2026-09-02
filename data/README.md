@@ -27,3 +27,5 @@ This writes `data/googleplaystore.csv` from a public copy of the same Kaggle fil
 3. Place it at `data/googleplaystore.csv` or in the repository root
 
 The notebook looks for the file in the current working directory first, then `data/`.
+
+`scripts/download_data.py` accepts the file only if it is the lava18 `googleplaystore.csv` used by this notebook: **10,841** data rows and SHA-256 `3e438f48161961933d26e99a8d9fc8ed79edfaa9fb34f8838e1ab4ec7a9fab91`. Use `--skip-checksum` only if you already know you have a compatible copy.
