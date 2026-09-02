@@ -1,0 +1,13 @@
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.DS_Store
+
+# Dataset is not stored in the repo; see README.md
+data/googleplaystore.csv
+data/googleplaystore_user_reviews.csv
+googleplaystore.csv
+googleplaystore_user_reviews.csv
